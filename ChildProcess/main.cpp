@@ -18,7 +18,7 @@ void signalHandler(int sigNum) {
 
 int main(int argc, char *argv[]) {
 
-  signal(SIGINT, signalHandler);
+  std::signal(SIGTERM, signalHandler);
 
   std::cout << "Hello from logger" << std::endl;
   
