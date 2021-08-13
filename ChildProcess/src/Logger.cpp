@@ -8,27 +8,24 @@ namespace logger {
     m_ms{ms}
   {
     actualizeCounter();
-    
-    std::string logFilePath = "./logs/log_" + Timer::getCurrentDateTime() + ".txt";
 
     try {
-      m_file.open(logFilePath, std::ios::out);
+      m_file.open(getLogFilePath(), std::ios::out);
     }
     catch(...) {
-      m_file.close();
-      m_configFile.close();
-      throw;
+      if(m_file.is_open())
+	m_file.close();
+      if(m_configFile.is_open())
+	m_configFile.close();
     }
   }
 
-  Logger::~Logger() { // no destuctor call after termination
+  Logger::~Logger() {
     writeConfigFile();
     m_configFile.close();
   }
 
   void Logger::consoleLogging() {
-    //Timer::setTimer(printLogMessage, static_cast<int<(m_ms));
-    //auto log = [&]() {std::cout << "Counter: " << m_counter.incrementCounter() << std::endl;}; 
     auto log = [&]()
 	       {
 		 uint32_t counter = m_counter.incrementCounter();
@@ -39,24 +36,28 @@ namespace logger {
   }
 
   void Logger::writeConfigFile() {
-    std::string configFilePath = "./logs/.lastCntConfig";
-    m_configFile.open(configFilePath);
-    m_configFile << m_counter.incrementCounter() - 1;
-    m_configFile.close();
+    m_configFile.open(getConfigFilePath());
+    if(m_configFile.is_open()) {
+      m_configFile << m_counter.incrementCounter() - 1;
+      m_configFile.close();
+    }
   }
 
   void Logger::actualizeCounter() {
-    std::string cfgFileName = "./logs/.lastCntConfig";
-    struct stat buffer;
-    if(stat(cfgFileName.c_str(), &buffer) == 0) {
-      std::ifstream file {cfgFileName};
+    std::ifstream file(getConfigFilePath(), std::ios::in);
+    if(file.is_open()) {
       std::string line;
-      if(file.is_open()) {
-	getline(file, line);
-	this->m_counter = std::stoi(line);
-      }
-
-      file.close();
+      std::getline(file, line);
+      this->m_counter = std::stoi(line);
     }
+    file.close();
+  }
+
+  std::string Logger::getLogFilePath() const {
+    return "../logs/log_" + Timer::getCurrentDateTime() + ".txt";
+  }
+
+  std::string Logger::getConfigFilePath() const {
+    return "../logs/.counter";
   }
 }

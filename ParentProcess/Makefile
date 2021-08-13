@@ -1,12 +1,10 @@
-EXE_NAME = logger
+EXE_NAME = starter
 
 CC = g++
 COMPILER_FLAGS = -std=c++11 -g -pthread
 
 SRC_PATH = ./src/*.cpp
 INCLUDE_PATH = -I./include
-
-INPUT_ARGS = 1000
 
 build:
 	$(CC) \
@@ -15,7 +13,8 @@ build:
 	$(SRC_PATH) main.cpp \
 	-o $(EXE_NAME)
 
-run: ./$(EXE_NAME) $(INPUT_ARGS)
+run:
+	./$(EXE_NAME)
 
 clean:
 	rm $(EXE_NAME)

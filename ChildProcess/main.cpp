@@ -1,5 +1,7 @@
 #include <iostream>
 #include <csignal>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include "InputParser.h"
 #include "Logger.h"
@@ -8,11 +10,11 @@ using namespace logger;
 
 Logger* gl_logger;
 
+static int term_cnt = 0;
+
 void signalHandler(int sigNum) {
-  std::cout << "Terminating the program" << std::endl;
-
-  gl_logger->~Logger();
-
+  delete gl_logger;
+  
   exit(sigNum);
 }
 

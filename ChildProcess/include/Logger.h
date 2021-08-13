@@ -27,6 +27,8 @@ namespace logger {
 
     void writeConfigFile();
     void actualizeCounter();
+    std::string getLogFilePath() const;
+    std::string getConfigFilePath() const;
   };
   
 }

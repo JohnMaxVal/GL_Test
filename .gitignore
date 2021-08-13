@@ -32,9 +32,11 @@
 *.app
 
 # Folders
-logs
 
 # Emacs cached files
-*.cpp~
-*.h~
 *~
+*.exe
+./ParentProcess/starter
+./ChildProcess/logger
+./logs/*.txt
+./logs/.counter
